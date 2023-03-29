@@ -88,22 +88,30 @@ public class GameFrame extends DefaultFrame {
             public void keyReleased(KeyEvent e) {
 
 
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    dispose();
-                    new MenuFrame(theme);
-                    SavedData.addAttempt(new Attempt(EXIT_GAME_CODE, false, theme));
-                    return;
-                }
 
 
-                if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && focusPoint.x != 0) {
+                switch (e.getKeyCode()){
 
-                    focusPoint = new Point(focusPoint.x - 1, focusPoint.y);
-                    letterBoxes[focusPoint.x][focusPoint.y].setText(' ');
-                    repaint();
+                    case KeyEvent.VK_ESCAPE -> {
+
+                        dispose();
+                        new MenuFrame(theme);
+                        SavedData.addAttempt(new Attempt(EXIT_GAME_CODE, false, theme));
+                        return;
+                    }
+
+                    case KeyEvent.VK_BACK_SPACE -> {
 
 
-                    return;
+                        focusPoint = (focusPoint.x != 0) ? new Point(focusPoint.x - 1, focusPoint.y) : new Point(focusPoint.x, focusPoint.y);
+                        letterBoxes[focusPoint.x][focusPoint.y].setText(EMPTY_CHAR);
+                        repaint();
+
+
+                        return;
+
+                    }
+
                 }
 
                 if (!String.valueOf(e.getKeyChar()).matches("[a-zA-Z]")) {
@@ -138,6 +146,9 @@ public class GameFrame extends DefaultFrame {
 
 
     //
+
+
+
 
 
     /**

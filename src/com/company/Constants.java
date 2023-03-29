@@ -55,8 +55,9 @@ public abstract class Constants {
 
 
 
-    public static int EXIT_GAME_CODE = -1;
-    public static int CHANGE_THEME_CODE = -2;
+    public static final int EXIT_GAME_CODE = -1;
+    public static final int CHANGE_THEME_CODE = -2;
+    public static final char EMPTY_CHAR = ' ';
 
 
 }
