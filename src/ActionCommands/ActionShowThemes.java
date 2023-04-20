@@ -9,6 +9,9 @@ public class ActionShowThemes extends DefaultAction implements ActionCommand{
     }
 
 
+    /**
+     * Displays a new ThemeFrame.
+     */
     @Override
     public void execute() {
 

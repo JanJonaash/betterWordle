@@ -11,9 +11,11 @@ public abstract class DefaultFrame extends JFrame {
     protected ColorTheme theme;
 
 
-
-
-    // sets up the DefaultFrame with a layeredPane, clears the static GameFrame noPositionLetters variable
+    /**
+     * Sets up the DefaultFrame with a layeredPane, clears the static GameFrame noPositionLetters variable
+     * @param theme
+     * @param size
+     */
     public DefaultFrame(ColorTheme theme, Dimension size){
         this.theme = theme;
         pane = new JLayeredPane();

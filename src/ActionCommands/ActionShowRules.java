@@ -13,6 +13,9 @@ public class ActionShowRules extends DefaultAction implements ActionCommand{
 
     }
 
+    /**
+     * Displays a new RulesFrame.
+     */
     @Override
     public void execute() {
         new RulesFrame(theme);

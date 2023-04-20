@@ -8,38 +8,37 @@ import java.util.*;
 public abstract class Words {
 
 
-    public static ArrayList<String> wordSet = new ArrayList<>();
+    public static ArrayList<String> wordList = new ArrayList<>();
 
 
-
-
-    // loads all the words into a wordSet arraylist while also making them uppercase
+    /**
+     * Reads the words.txt file and stores an uppercase version of the word in the wordList.
+     *
+     * @throws IOException
+     */
     static void loadWords() throws IOException {
 
 
+        BufferedReader br = new BufferedReader(new FileReader("src/com/company/words.txt"));
 
+        String line = "";
 
-          BufferedReader  br = new BufferedReader(new FileReader("src/com/company/words.txt"));
+        while ((line = br.readLine()) != null) {
 
-            String line = "";
-
-            while ((line = br.readLine()) != null){
-
-                wordSet.add(line.toUpperCase());
-            }
-            br.close();
-
-
+            wordList.add(line.toUpperCase());
+        }
+        br.close();
 
 
     }
 
 
-    //returns a random word from the wordSet collection
-    public static String chooseRandomWord(){
+    /**
+     * returns a random word from the wordList collection
+     */
+    public static String chooseRandomWord() {
 
 
-
-        return Words.wordSet.get(new Random().nextInt(Words.wordSet.size() - 1));
+        return Words.wordList.get(new Random().nextInt(Words.wordList.size() - 1));
     }
 }

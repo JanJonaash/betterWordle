@@ -13,13 +13,20 @@ public abstract class SavedData implements Serializable {
     }
 
 
-    // creates the attemptList
+    /**
+     * Creates the attemptList.
+     */
     public static void createAttemptList() {
         attemptList = new ArrayList<>();
     }
 
 
-    //adds an attempt to the attemptList, calls the writeToFile method
+    /**
+     * Adds an attempt to the attemptList.
+     * <p>
+     * Calls writeToFile().
+     * @param a
+     */
     public static void addAttempt(Attempt a) {
 
 
@@ -28,14 +35,14 @@ public abstract class SavedData implements Serializable {
     }
 
 
-
-
-    //writes a copy of the attemptList into a ser file
+    /**
+     * Writes a copy of the attemptList into a ser file
+     */
     public static void writeToFile() {
 
 
         try {
-            FileOutputStream fout = new FileOutputStream("data.ser");
+            var fout = new FileOutputStream("data.ser");
             ObjectOutputStream oout = new ObjectOutputStream(fout);
 
             ArrayList<Attempt> toCopy = new ArrayList<>(attemptList);
@@ -45,36 +52,36 @@ public abstract class SavedData implements Serializable {
             fout.close();
             oout.close();
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-
-    //reads the ser file and stores its data in the attemptList
-    public static void readFromFile() {
-
-
-        try {
-            FileInputStream fin = new FileInputStream("data.ser");
-            ObjectInputStream oin = new ObjectInputStream(fin);
-
-
-            attemptList = (ArrayList<Attempt>) oin.readObject();
-
-            fin.close();
-            oin.close();
-
-        } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
-        }
 
 
     }
 
 
-    // returns user's theme from the last "attempt", if no such attempt exist then returns the default theme
+    /**
+     * Reads the ser file and stores its data in the attemptList
+     */
+    public static void readFromFile() throws IOException, ClassNotFoundException {
+
+
+        FileInputStream fin = new FileInputStream("data.ser");
+        ObjectInputStream oin = new ObjectInputStream(fin);
+
+
+        attemptList = (ArrayList<Attempt>) oin.readObject();
+
+        fin.close();
+        oin.close();
+
+
+    }
+
+
+    /**
+     * Returns user's theme from the last "attempt", if no such attempt exist then returns the default theme
+     */
     public static ColorTheme getLastTheme() {
 
 

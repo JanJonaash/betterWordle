@@ -12,12 +12,14 @@ public class ActionShowMoreRules extends DefaultAction implements ActionCommand 
 
 
     /**
-     displays a JOptionPane showing additional rules
+     * Displays a JOptionPane showing additional rules.
+     * <p>
+     * Displays a new RulesFrame.
      */
     @Override
     public void execute() {
-        JOptionPane.showMessageDialog  (null,"If no letters are highlighted or you don't continue to next row, the word is not contained in the collection. \n" +
-                "\nPressing ESC quits to main menu, this will result in a not completed attempt." ,"Additional rules", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "If no letters are highlighted or you don't continue to next row, the word is not contained in the collection. \n" +
+                "\nPressing ESC quits to main menu, this will result in a not completed attempt.", "Additional rules", JOptionPane.INFORMATION_MESSAGE);
 
         new RulesFrame(theme);
     }

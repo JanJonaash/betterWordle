@@ -11,7 +11,9 @@ public class ActionStartGame extends DefaultAction implements ActionCommand{
     }
 
 
-
+    /**
+     * Displays a new GameFrame.
+     */
     @Override
     public void execute() {
         new GameFrame(theme);

@@ -3,13 +3,14 @@ package ActionCommands;
 import Frames.StatsFrame;
 import com.company.ColorTheme;
 
-import java.awt.*;
-
 public class ActionShowStats extends DefaultAction implements ActionCommand{
     public ActionShowStats(ColorTheme theme) {
         super(theme);
     }
 
+    /**
+     * Displays a new StatsFrame.
+     */
     @Override
     public void execute() {
 

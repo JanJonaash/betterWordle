@@ -3,7 +3,7 @@ package ActionCommands;
 import com.company.ColorTheme;
 
 
-public class ActionExitGame extends DefaultAction implements ActionCommand{
+public class ActionExitGame extends DefaultAction implements ActionCommand {
 
 
     public ActionExitGame(ColorTheme theme) {
@@ -11,9 +11,8 @@ public class ActionExitGame extends DefaultAction implements ActionCommand{
     }
 
     /**
-     exits the application
+     * exits the application
      */
-
     @Override
     public void execute() {
         System.exit(0);

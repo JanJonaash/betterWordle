@@ -21,27 +21,79 @@ public class StatsFrame extends DefaultFrame {
     final int infoXRight = (int) (infoCenterX + INFO_SIZE.getWidth() / 4);
 
 
-    int longestStreak = 0;
-    int currentStreak = 0;
+    private int longestStreak = 0;
+    private int currentStreak = 0;
+    private double successRate;
 
+    public double getSuccessRate() {
+        return successRate;
+    }
 
-    /*
-    sets up the StatsFrame, calculates all wins and amount of theme changes
-
-
-    calls setupAttempts()
-
-    sets up the title,success and streaks infoLabels based on constants
-
-    calculates the success rate and rounds it to display in the success infoLabel
-
-    calls calculateStreaks() and displays them on the streaks infoLabel
-
-    adds a menu actionBox
+    /**
+     * Sets up the StatsFrame.
+     * <p>
+     * Calls setupAttempts().
+     * <p>
+     * Calls calculateSuccessRate() and stores the result.
+     * <p>
+     * Calls calculateStreaks().
+     * <p>
+     * Adds title, success and streak InfoLabels.
+     * <p>
+     * Adds menu, clear ActionBoxes.
+     * <p>
      */
 
     public StatsFrame(ColorTheme theme) {
         super(theme, new Dimension(600, 700));
+
+
+        setupAttempts();
+        successRate = calculateSuccessRate();
+        calculateStreaks();
+
+
+        InfoLabel title = new InfoLabel("Your statistics", new Point(infoCenterX, 0), theme);
+        title.setFont(new Font(title.getFont().getFontName(), Font.BOLD, 50));
+
+
+        InfoLabel success = new InfoLabel("General success rate: " + successRate + "%", new Point(infoCenterX, 400), theme);
+        success.setFont(new Font(success.getFont().getFontName(), Font.ITALIC, 30));
+
+
+        InfoLabel streaks = new InfoLabel("Longest streak " + longestStreak + ", Current streak " + currentStreak, new Point(infoCenterX, success.getY() + success.getHeight() / 2), theme);
+        streaks.setFont(new Font(success.getFont().getFontName(), Font.ITALIC, 20));
+
+
+        ActionBox menuBox = new ActionBox(new Point(LETTER_DISTANCE_MARGIN, (int) (getHeight() - ACTION_SIZE.getHeight() - LETTER_DISTANCE_MARGIN)), theme, new ActionShowMenu(theme), this);
+        menuBox.setSize((int) ((getWidth()) / 2 - LETTER_DISTANCE_MARGIN * 1.5), (int) ACTION_SIZE.getHeight());
+
+
+        ActionBox clearBox = new ActionBox(new Point(getWidth() - LETTER_DISTANCE_MARGIN - menuBox.getWidth(), menuBox.getY()), theme, new ActionClearData(theme), this);
+        clearBox.setSize(menuBox.getSize());
+
+
+        pane.add(title);
+        pane.add(success);
+        pane.add(streaks);
+
+        pane.add(menuBox);
+        pane.add(clearBox);
+
+
+    }
+
+
+    /**
+     * Calculates amount of wins and theme changes from the attemptList.
+     * <p>
+     * Divides wins by the difference of the attemptList size and amount of theme changes.
+     * <p>
+     * Multiplies the result by 100.
+     *
+     * @return
+     */
+    public double calculateSuccessRate() {
 
 
         double wins = 0;
@@ -53,63 +105,15 @@ public class StatsFrame extends DefaultFrame {
 
         }
 
-
-        setupAttempts();
-
-        InfoLabel title = new InfoLabel("Your statistics", new Point(infoCenterX, 0), theme);
-        title.setFont(new Font(title.getFont().getFontName(), Font.BOLD, 50));
-        pane.add(title);
-
-
-        double successRate = (wins / (SavedData.getAttemptList().size() - amountOfThemeChanges)) * 100;
-
-
-        InfoLabel success = new InfoLabel("General success rate: " + Math.round(successRate) + "%", new Point(infoCenterX, 400), theme);
-        success.setFont(new Font(success.getFont().getFontName(), Font.ITALIC, 30));
-        pane.add(success);
-
-
-        calculateStreaks();
-
-        InfoLabel streaks = new InfoLabel("Longest streak " + longestStreak + ", Current streak " + currentStreak, new Point(infoCenterX, success.getY() + success.getHeight() / 2), theme);
-        streaks.setFont(new Font(success.getFont().getFontName(), Font.ITALIC, 20));
-        pane.add(streaks);
-
-        ActionBox menuBox = new ActionBox(new Point(LETTER_DISTANCE_MARGIN, (int) (getHeight() - ACTION_SIZE.getHeight() - LETTER_DISTANCE_MARGIN)), theme, new ActionShowMenu(theme), this);
-        menuBox.setSize((int) ((getWidth()) / 2 - LETTER_DISTANCE_MARGIN * 1.5), (int) ACTION_SIZE.getHeight());
-
-
-        pane.add(menuBox);
-
-
-        ActionBox clearBox = new ActionBox(new Point(getWidth() - LETTER_DISTANCE_MARGIN - menuBox.getWidth(), menuBox.getY()), theme, new ActionClearData(theme), this);
-        clearBox.setSize(menuBox.getSize());
-        pane.add(clearBox);
-
+        return Math.round ((wins / (SavedData.getAttemptList().size() - amountOfThemeChanges)) * 100);
     }
 
-
     /**
-     * sets up the attempt info labels via a cycle, utilising AtomicIntegers due to stream API usage
-     * before the cycle starts, an atomic integer array attemptCounterStats (short form ACS) of size 6 is created
+     * Creates AtomicInteger array to store statistics.
      * <p>
+     * Calculates all the 1-6 completed attempts in the attemptList, stores them in the array.
      * <p>
-     * the cycle starts at 1 and goes to < 7, with the iteration index i
-     * <p>
-     * at the start of the iteration, the value of ACS with the index i-1 is created as an empty atomic integer
-     * <p>
-     * then the attemptList is filtered for attempts with attempt amounts being the same as i, and being completed as well.
-     * And for each of those attempts the value of ACS at the index i-1 is increased by 1.
-     * <p>
-     * <p>
-     * <p>
-     * <p>
-     * the x position of the infoLabel is decided by the value of i, with 1-3 being the left side constant and the rest is right side.
-     * <p>
-     * the y position is also determined by i, with 1;4 being the top, 2;5 being the middle and 3;6 being the bottom
-     * <p>
-     * then the infoLabel is created utilising the x and y for location, the i value for labeling and the ACS i-1 value for data.
-     * custom font is also set.
+     * Sets up the attemptLabels based on the number they represent (position, text)
      */
 
 
@@ -146,23 +150,34 @@ public class StatsFrame extends DefaultFrame {
 
 
     /**
-     * calculates the longest streak based on the attemptList data set using a temp variable to store the current longest streak:
+     * Calculates the longest streak based on the attemptList data set using a temp variable to store the current longest streak:
      * <p>
      * <p>
-     * cycles through the collection
-     * if the attempt has CHANGE_THEME_CODE, the iteration is skipped
-     * if the attempt is successful, tempLongest is increased by 1
      * <p>
-     * if the attempt is unsuccessful or the iteration is the last one:
+     * Cycles through the collection.
      * <p>
-     * check if the attempt is successful (last iteration scenario), if yes, then it stores the tempLongest + 1 into the allStreaks arrayList
+     * If the attempt has CHANGE_THEME_CODE, the iteration is skipped.
      * <p>
-     * proceeds to compare longest with tempLongest, and the larger one is stored into the longest variable.
+     * If the attempt is successful, tempLongest is increased by 1.
+     * <p>
+     * If the attempt is unsuccessful or the iteration is the last one:
+     * <p>
+     * - Checks if the attempt is successful (last iteration scenario), if yes:
+     * <p>
+     * -- Stores the tempLongest + 1 into the allStreaks arrayList.
+     * <p>
+     * -- Proceeds to compare longest with tempLongest+1, and the larger one is stored into the longest variable.
+     * <p>
+     * - if not:
+     * <p>
+     * -- Proceeds to compare longest with tempLongest, and the larger one is stored into the longest variable.
+     * <p>
      * tempLongest is set to 0.
      * <p>
      * <p>
-     * the global longestStreak variable is set to longest
-     * the global currentStreak variable is set to the last element of the allStreaks arrayList, if not possible, it is set to 0.
+     * The global longestStreak is set to longest, if longest is not -1. If yes, It is set to 0.
+     * <p>
+     * The global currentStreak is set to the last element of the allStreaks arrayList, if not possible, it is set to 0.
      */
 
     void calculateStreaks() {
@@ -188,10 +203,11 @@ public class StatsFrame extends DefaultFrame {
 
                 if (at.completed()) {
                     allStreaks.add(tempLongest + 1);
+                    longest = Math.max(tempLongest + 1, longest);
+                } else {
+                    longest = Math.max(tempLongest, longest);
                 }
 
-
-                longest = Math.max(tempLongest, longest);
 
                 tempLongest = 0;
 

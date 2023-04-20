@@ -9,7 +9,12 @@ import static com.company.Constants.LETTER_FONT;
 public class InfoLabel extends JLabel {
 
 
-    //sets up the infoLabel with basic attributes, either from constants or constructor parameters
+    /**
+     * Sets up the InfoLabel.
+     * @param text
+     * @param location
+     * @param theme
+     */
     public InfoLabel(String text, Point location, ColorTheme theme){
 
         this.setSize(INFO_SIZE);

@@ -1,7 +1,5 @@
 package com.company;
 
-import Frames.RulesFrame;
-
 import java.awt.*;
 
 public abstract class Constants {

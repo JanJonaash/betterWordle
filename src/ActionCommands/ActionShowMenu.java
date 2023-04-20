@@ -8,6 +8,9 @@ public class ActionShowMenu extends DefaultAction implements ActionCommand{
         super(theme);
     }
 
+    /**
+     * Displays a new MenuFrame.
+     */
     @Override
     public void execute() {
         new MenuFrame(theme);

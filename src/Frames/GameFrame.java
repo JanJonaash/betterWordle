@@ -21,19 +21,22 @@ public class GameFrame extends DefaultFrame {
 
 
     public static String noPositionLetters = " ";
-    static String wrongPositionLetters = " ";
-    static String correctPositionLetters = " ";
+    public static String wrongPositionLetters = " ";
+    public static String correctPositionLetters = " ";
 
 
     /**
-     * sets up the GameFrame
+     * Sets up the GameFrame.
      * <p>
-     * sets the focusPoint as 0,0
+     * Sets the focusPoint as 0;0.
      * <p>
-     * chooses a random word from selection
-     * creates the 2D letterBox array as [WORD_LENGTH][ATTEMPT_AMOUNT]
-     * calls setupBoxes()
-     * calls addKeyReactivity()
+     * Chooses a random word from selection.
+     * <p>
+     * Creates the 2D letterBox array as [WORD_LENGTH][ATTEMPT_AMOUNT].
+     * <p>
+     * Calls setupBoxes().
+     * <p>
+     * Calls addKeyReactivity().
      *
      * @param theme
      */
@@ -53,7 +56,6 @@ public class GameFrame extends DefaultFrame {
 
 
         setUpBoxes();
-
         addKeyReactivity();
 
 
@@ -61,24 +63,41 @@ public class GameFrame extends DefaultFrame {
 
 
     /**
-     * adds keyRelease reactivity, with special cases:
-     * <p>
-     * ESC- disposes the frame, creates a MenuFrame, adds an attempt to SavedData with attemptAmount being EXIT_GAME_CODE and completed being false.
-     * BACKSPACE - moves the focus point to its previous x position focusPoint(focusPoint.y,focusPoint.x-1), and sets the letterBoxes[focusPoint.x][focusPoint.y] letterBox text as ' ' (space char)
-     * NON-LETTER - forced return
-     * <p>
-     * else:
-     * <p>
-     * letterBoxes[focusPoint.x][focusPoint.y] text is set as the keyChar from the keyEvent
-     * <p>
-     * if the focusPoint.x is equal to WORD_LENGTH - 1, then:
-     * <p>
-     * wodCheck() is called, if failed then focusPoint x is increased by 1 and then force returns
-     * <p>
-     * focusPoint is set to (0, y+1) and if y equals ATTEMPT_AMOUNT then calls exitGame(false)
+     * Adds a KeyListener to the JFrame with a KeyRelease reactivity.
      * <p>
      * <p>
-     * and if the focusPoint.x is not equal to WORD_LENGTH - 1, focusPoint x is increased by 1.
+     * <p>
+     * ESCAPE:
+     * <p>
+     * Disposes the JFrame.
+     * <p>
+     * Creates a new MenuFrame.
+     * <p>
+     * Saves the attempt to SavedData with false completion and EXIT_GAME_CODE as attempt amount.
+     * <p>
+     * returns.
+     * <p>
+     * <p>
+     * <p>
+     * BACKSPACE:
+     * <p>
+     * Calls moveFocusPoint(true)
+     * <p>
+     * letterBoxes[focusPoint x][focusPoint y] text is to EMPTY_CHAR
+     * <p>
+     * returns.
+     * <p>
+     * <p>
+     * <p>
+     * NON-LETTER:
+     * <p>
+     * returns.
+     * <p>
+     * <p>
+     * <p>
+     * letterBoxes[focusPoint x][focusPoint y] text is to e.getKeyChar().
+     * <p>
+     * Calls moveFocusPoint(false)
      */
     void addKeyReactivity() {
 
@@ -88,9 +107,7 @@ public class GameFrame extends DefaultFrame {
             public void keyReleased(KeyEvent e) {
 
 
-
-
-                switch (e.getKeyCode()){
+                switch (e.getKeyCode()) {
 
                     case KeyEvent.VK_ESCAPE -> {
 
@@ -102,9 +119,8 @@ public class GameFrame extends DefaultFrame {
 
                     case KeyEvent.VK_BACK_SPACE -> {
 
-
-                        focusPoint = (focusPoint.x != 0) ? new Point(focusPoint.x - 1, focusPoint.y) : new Point(focusPoint.x, focusPoint.y);
-                        letterBoxes[focusPoint.x][focusPoint.y].setText(EMPTY_CHAR);
+                        moveFocusPoint(true);
+                        letterBoxes[(int) focusPoint.getX()][(int) focusPoint.getY()].setText(EMPTY_CHAR);
                         repaint();
 
 
@@ -119,41 +135,81 @@ public class GameFrame extends DefaultFrame {
                 }
 
 
-                letterBoxes[focusPoint.x][focusPoint.y].setText(e.getKeyChar());
-                if (focusPoint.x == WORD_LENGTH - 1) {
-
-                    if (!wordCheck()) {
-                        focusPoint = new Point(focusPoint.x + 1, focusPoint.y);
-                        return;
-                    }
-
-                    focusPoint = new Point(0, focusPoint.y + 1);
-                    if (focusPoint.y == ATTEMPT_AMOUNT) {
-
-                        exitGame(false);
-                    }
-
-
-                } else {
-
-                    focusPoint = new Point(focusPoint.x + 1, focusPoint.y);
-                }
+                letterBoxes[(int) focusPoint.getX()][(int) focusPoint.getY()].setText(e.getKeyChar());
+                moveFocusPoint(false);
 
 
             }
         });
     }
 
+    /**
+     * focusPoint is set to focusPoint x-1 ; focusPoint y, if x is bigger than 0. If not, it stays the same.
+     * <p>
+     * returns.
+     * <p>
+     * <p>
+     * If focusPoint x is equal to WORD_LENGTH-1:
+     *
+     * <p>
+     * - wordCheck() is called, and if it fails:
+     * <p>
+     * -- focusPoint is set to focusPoint x+1 ; focusPoint y.
+     * <p>
+     * -- returns.
+     * <p>
+     * - focusPoint is set to 0 ; focusPoint y+1
+     * <p>
+     * - If focusPoint x is equal to ATTEMPT_AMOUNT:
+     * <p>
+     * -- Calls exitGame(false)
+     * <p>
+     * <p>
+     * else:
+     * <p>
+     * - focusPoint is set to focusPoint x+1 ; focusPoint y
+     *
+     * @param backward
+     */
+    void moveFocusPoint(boolean backward) {
 
-    //
+
+        if (backward) {
+            focusPoint = ((int) focusPoint.getX() != 0) ? new Point((int) focusPoint.getX() - 1, (int) focusPoint.getY()) : new Point((int) focusPoint.getX(), (int) focusPoint.getY());
+            return;
+
+        }
 
 
+        if ((int) focusPoint.getX() == WORD_LENGTH - 1) {
 
+            if (!wordCheck()) {
+                focusPoint = new Point((int) focusPoint.getX() + 1, (int) focusPoint.getY());
+                return;
+            }
+
+            focusPoint = new Point(0, (int) focusPoint.getY() + 1);
+            if ((int) focusPoint.getY() == ATTEMPT_AMOUNT) {
+
+                exitGame(false);
+            }
+
+
+        } else {
+
+            focusPoint = new Point((int) focusPoint.getX() + 1, (int) focusPoint.getY());
+        }
+
+
+    }
 
 
     /**
-     * creates the playing field as a ATTEMPT_AMOUNT x WORD_LENGTH letterBox grind (Y x X), calculates the position of the letterBoxes based on constants,
-     * adds them to the pane and adds them to the two-dimensional letterBox array ([X][Y])
+     * Creates the playing field as a ATTEMPT_AMOUNT x WORD_LENGTH letterBox grind.
+     * <p>
+     * Calculates the position of the letterBoxes based on constants.
+     * <p>
+     * Adds them to the pane and to the two-dimensional letterBox array [X][Y]
      */
     void setUpBoxes() {
 
@@ -178,12 +234,16 @@ public class GameFrame extends DefaultFrame {
     }
 
 
-    //
-
     /**
-     * builds the word from each letterBox put together, then checks if the Word.wordSet contains said word.
+     * Builds the word from each letterBox in a row put together, then checks if the Words.wordList contains said word.
      * <p>
-     * If no, returns false, if yes, continues to a colorChange, returns true and if the userword is the supposed word, then calls exitGame(true), and returns true
+     * If no, returns false.
+     * <p>
+     * Calls colorChange().
+     * <p>
+     * If the userword is the supposed word, then calls exitGame(true).
+     * <p>
+     * Returns true.
      *
      * @return
      */
@@ -193,11 +253,10 @@ public class GameFrame extends DefaultFrame {
         String userWord = "";
 
         for (int i = 0; i < WORD_LENGTH; i++) {
-
-            userWord += letterBoxes[i][focusPoint.y].getText();
+            userWord += letterBoxes[i][(int) focusPoint.getY()].getText();
         }
 
-        if (!Words.wordSet.contains(userWord)) {
+        if (!Words.wordList.contains(userWord)) {
             return false;
         }
 
@@ -216,7 +275,7 @@ public class GameFrame extends DefaultFrame {
 
 
     /**
-     * Sets all letters in a focusPoint.y row to a no position background at first, then checks for wrong positions.
+     * Sets all letters in a focusPoint y row to a no position background at first, then checks for wrong positions.
      * <p>
      * <br>
      * If a wrong position letter occurs, the LetterBox is set to a wrong position background, and the letter character is added to the static wrongPositionLetters variable.
@@ -227,14 +286,14 @@ public class GameFrame extends DefaultFrame {
      * At the end checks for correct positions, changing the appropriate labels to a correct position background, and adding the correct letters to the static correctPositionLetters variable.
      * <p>
      * <br>
-     * Finally, adds all background-wise unchanged LetterBoxes letters to the static noPositionLetters variable
+     * Finally, adds all background-wise unchanged LetterBoxes letters to the static noPositionLetters variable.
      *
      * @param userWord
      */
     void colorChange(String userWord) {
 
         for (int l = 0; l < WORD_LENGTH; l++) {
-            letterBoxes[l][focusPoint.y].setNoPositionBG();
+            letterBoxes[l][(int) focusPoint.getY()].setNoPositionBG();
 
         }
         String usedWrongPositionChars = " ";
@@ -248,9 +307,9 @@ public class GameFrame extends DefaultFrame {
             if (word.contains("" + userWord.charAt(k)) && !(userWord.charAt(k) == word.charAt(k))) {
 
 
-                letterBoxes[k][focusPoint.y].setWrongPositionBG();
-                usedWrongPositionChars += letterBoxes[k][focusPoint.y].getText();
-                wrongPositionLetters += letterBoxes[k][focusPoint.y].getText();
+                letterBoxes[k][(int) focusPoint.getY()].setWrongPositionBG();
+                usedWrongPositionChars += letterBoxes[k][(int) focusPoint.getY()].getText();
+                wrongPositionLetters += letterBoxes[k][(int) focusPoint.getY()].getText();
 
             }
 
@@ -261,12 +320,12 @@ public class GameFrame extends DefaultFrame {
 
 
             if (userWord.charAt(j) == word.charAt(j)) {
-                letterBoxes[j][focusPoint.y].setCorrectPositionBG();
-                correctPositionLetters += letterBoxes[j][focusPoint.y].getText();
+                letterBoxes[j][(int) focusPoint.getY()].setCorrectPositionBG();
+                correctPositionLetters += letterBoxes[j][(int) focusPoint.getY()].getText();
             }
 
-            if (letterBoxes[j][focusPoint.y].getBackground() == theme.noPositionBackground()) {
-                noPositionLetters += letterBoxes[j][focusPoint.y].getText();
+            if (letterBoxes[j][(int) focusPoint.getY()].getBackground() == theme.noPositionBackground()) {
+                noPositionLetters += letterBoxes[j][(int) focusPoint.getY()].getText();
 
             }
 
@@ -279,9 +338,19 @@ public class GameFrame extends DefaultFrame {
     private Timer exitTimer = null;
 
 
-    // disposes the JFrame, creates a GameOverFrame with the completion parameter, adds the attempt to saved data which is then serialized
-    // all with a 100 ms delay
-    //a null check is used for double game-end prevention
+    /**
+     * Goes through a null check for exitTimer (double game-end prevention).
+     * <p>
+     * Schedules a one-time TimerTask with 100ms delay, which:
+     * <p>
+     * - Disposes the JFrame.
+     * <p>
+     * - Creates a GameOverFrame.
+     * <p>
+     * - Calls SavedData.addAttempt() with focusPoint.getY(), theme and completed as params.
+     *
+     * @param completed
+     */
     void exitGame(boolean completed) {
         if (exitTimer == null) {
             exitTimer = new Timer();
@@ -289,8 +358,8 @@ public class GameFrame extends DefaultFrame {
                 @Override
                 public void run() {
                     dispose();
-                    new GameOverFrame(word, theme, completed).setVisible(true);
-                    SavedData.addAttempt(new Attempt(focusPoint.y, completed, theme));
+                    new GameOverFrame(word, theme, completed);
+                    SavedData.addAttempt(new Attempt((int) focusPoint.getY(), completed, theme));
 
                 }
             }, 100);

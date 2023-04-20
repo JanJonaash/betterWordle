@@ -15,7 +15,13 @@ public class LetterBox extends JLabel {
     private ColorTheme theme;
 
 
-    //sets up the letterBox, makes it default background
+    /**
+     * Sets up the LetterBox.
+     * calls setDefaultBG().
+     *
+     * @param location
+     * @param theme
+     */
     public LetterBox(Point location, ColorTheme theme) {
 
 
@@ -38,7 +44,19 @@ public class LetterBox extends JLabel {
     }
 
 
-    //sets the text as the uppercase version of the parameter, then changes the background if it is contained in the noPositionLetters collection, or if the parameter is a whitespace char
+    /**
+     * If noPositionLetters contain the uppercase version of the char:
+     * <p>
+     * - Calls setNoPositionBG().
+     * <p>
+     * If the char is EMPTY_CHAR:
+     * <p>
+     * - Calls setDefaultBG().
+     * <p>
+     * Sets the text as the uppercase version of the char.
+     *
+     * @param c
+     */
     public void setText(char c) {
 
 
@@ -46,7 +64,7 @@ public class LetterBox extends JLabel {
 
             setNoPositionBG();
         }
-        if (c == ' ') {
+        if (c == EMPTY_CHAR) {
 
             setDefaultBG();
         }
@@ -59,7 +77,9 @@ public class LetterBox extends JLabel {
     }
 
 
-    //sets the correctPositiontBackground along with appropriate border
+    /**
+     * Sets the background and border as correctPositionBackground.
+     */
     public void setCorrectPositionBG() {
 
 
@@ -68,7 +88,9 @@ public class LetterBox extends JLabel {
 
     }
 
-    //sets the wrongPositionBackground along with appropriate border
+    /**
+     * Sets the background and border as wrongPositionBackground.
+     */
     public void setWrongPositionBG() {
 
 
@@ -77,7 +99,9 @@ public class LetterBox extends JLabel {
 
     }
 
-    //sets the noPositiontBackground along with appropriate border
+    /**
+     * Sets the background and border as noPositionBackground.
+     */
     public void setNoPositionBG() {
 
 
@@ -86,7 +110,11 @@ public class LetterBox extends JLabel {
 
     }
 
-    //sets the defaultBackground along with appropriate border
+    /**
+     * Sets the background as letterBackground.
+     * <p>
+     * Sets the border to secondary.
+     */
     public void setDefaultBG() {
         setBackground(theme.letterBackground());
         setBorder(new MatteBorder(borderSize, borderSize, borderSize, borderSize, theme.secondary()));

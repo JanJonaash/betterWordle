@@ -18,80 +18,98 @@ public class RulesFrame extends DefaultFrame {
 
     LetterBox[] letterBoxes;
 
-    //sets up the info display letter boxes and appropriate infoBoxes (rules) based on the heights and sizes of both the frame anc each component
-    //alters the letterBox rules to make them smaller and correctly offset
-    //adds a menu actionBox
-    //calls the setupBoxes method
+
+    /**
+     * Sets up the RulesFrame.
+     * <p>
+     * Adds 4 rule infoBoxes.
+     * <p>
+     * Adds LetterBoxes displaying correctPosition, wrongPosition and noPosition backgrounds.
+     * <p>
+     * Adds a menu ActionBox.
+     * <p>
+     * Adds a moreRules ActionBox.
+     * <p>
+     * Calls alterRules() with params: secondRule, thirdRule, fourthRule.
+     * <p>
+     * Calls setupBoxes()
+     * <p>
+     * Calls startAnimation()
+     *
+     * @param theme
+     */
     public RulesFrame(ColorTheme theme) {
         super(theme, new Dimension((int) ((Constants.LETTER_DISTANCE_MARGIN) * (WORD_LENGTH + 1) + WORD_LENGTH * Constants.LETTER_SIZE.getWidth()),
-                (int) (INFO_SIZE.getHeight() + LETTER_SIZE.getHeight()*4 + LETTER_DISTANCE_MARGIN*8 + ACTION_SIZE.getHeight())));
+                (int) (INFO_SIZE.getHeight() + LETTER_SIZE.getHeight() * 4 + LETTER_DISTANCE_MARGIN * 8 + ACTION_SIZE.getHeight())));
 
 
         int xOffsetBox = LETTER_DISTANCE_MARGIN * 4;
         int xOffsetRule = (int) (LETTER_DISTANCE_MARGIN * 6 + LETTER_SIZE.getWidth());
+
         InfoLabel firstRule = new InfoLabel("Guess a 5 letter word", new Point(0, 0), theme);
-        pane.add(firstRule);
+
 
         LetterBox correctBox = new LetterBox(new Point(xOffsetBox, (int) (LETTER_SIZE.getHeight() * 2 + LETTER_DISTANCE_MARGIN * 2)), theme);
         correctBox.setCorrectPositionBG();
         correctBox.setText("-");
-        pane.add(correctBox);
+
 
         InfoLabel secondRule = new InfoLabel(" Correct position", new Point(xOffsetRule, (int) (LETTER_SIZE.getHeight() * 2 + LETTER_DISTANCE_MARGIN * 2)), theme);
-        pane.add(secondRule);
 
 
         LetterBox wrongBox = new LetterBox(new Point(xOffsetBox, (int) (LETTER_SIZE.getHeight() * 3 + LETTER_DISTANCE_MARGIN * 3)), theme);
         wrongBox.setWrongPositionBG();
         wrongBox.setText("-");
-        pane.add(wrongBox);
+
 
         InfoLabel thirdRule = new InfoLabel(" Wrong position", new Point(xOffsetRule, (int) (LETTER_SIZE.getHeight() * 3 + LETTER_DISTANCE_MARGIN * 3)), theme);
-        pane.add(thirdRule);
 
 
         LetterBox noBox = new LetterBox(new Point(xOffsetBox, (int) (LETTER_SIZE.getHeight() * 4 + LETTER_DISTANCE_MARGIN * 4)), theme);
         noBox.setNoPositionBG();
         noBox.setText("-");
-        pane.add(noBox);
+
 
         InfoLabel fourthRule = new InfoLabel(" Not contained in the word", new Point(xOffsetRule, (int) (LETTER_SIZE.getHeight() * 4 + LETTER_DISTANCE_MARGIN * 4)), theme);
+
+
+        ActionBox menuBox = new ActionBox(new Point(LETTER_DISTANCE_MARGIN, (int) (getHeight() - ACTION_SIZE.getHeight() - LETTER_DISTANCE_MARGIN)), theme, new ActionShowMenu(theme), this);
+        menuBox.setSize((int) ((getWidth()) / 2 - LETTER_DISTANCE_MARGIN * 1.5), (int) ACTION_SIZE.getHeight());
+
+        ActionBox moreRulesBox = new ActionBox(new Point(getWidth() - LETTER_DISTANCE_MARGIN - menuBox.getWidth(), menuBox.getY()), theme, new ActionShowMoreRules(theme), this);
+        moreRulesBox.setSize(menuBox.getSize());
+
+
+        pane.add(firstRule);
+        pane.add(secondRule);
+        pane.add(thirdRule);
         pane.add(fourthRule);
 
-
-
-        alterRules(secondRule);
-        alterRules(thirdRule);
-        alterRules(fourthRule);
-
-        setUpBoxes();
-
-        ActionBox menuBox =
-
-                new ActionBox(new Point(LETTER_DISTANCE_MARGIN, (int) (getHeight() - ACTION_SIZE.getHeight() - LETTER_DISTANCE_MARGIN)), theme, new ActionShowMenu(theme), this);
-
-
-
-
-        menuBox.setSize((int) ( (getWidth())/2-LETTER_DISTANCE_MARGIN*1.5), (int) ACTION_SIZE.getHeight());
-
+        pane.add(correctBox);
+        pane.add(wrongBox);
+        pane.add(noBox);
 
         pane.add(menuBox);
-
-        ActionBox moreRulesBox = new ActionBox(new Point(getWidth()- LETTER_DISTANCE_MARGIN - menuBox.getWidth(), menuBox.getY()),theme,new ActionShowMoreRules(theme),this);
-       moreRulesBox.setSize(menuBox.getSize());
         pane.add(moreRulesBox);
+
+
+        alterRules(secondRule, thirdRule, fourthRule);
+
+        setUpBoxes();
+        startAnimation();
+
+
     }
 
 
     /**
-     sets up the 5 animation letterBoxes, based on array index, offsets and common y.
-     calls startAnimation()
+     * Creates the word display as a 1 x WORD_LENGTH letterBox grid.
+     * <p>
+     * Calculates the position of the letterBoxes based on constants.
      */
 
 
     void setUpBoxes() {
-
 
 
         letterBoxes = new LetterBox[WORD_LENGTH];
@@ -111,14 +129,11 @@ public class RulesFrame extends DefaultFrame {
         }
 
 
-        startAnimation();
-
-
     }
 
 
     /**
-     starts and repeats an animation once per 5s
+     * Calls animate() every 5s
      */
 
     void startAnimation() {
@@ -140,8 +155,25 @@ public class RulesFrame extends DefaultFrame {
     }
 
     /**
-     resets all the letterBoxes, generates a random word, generates a random typing speed,
-     proceeds to type letter by letter, simulating gameplay, at the end makes all the letterBoxes a random background(correct, no, and wrong position)
+     * Chooses a random word to display.
+     * <p>
+     * Sets each letterBox's text to EMPTY_CHAR.
+     * <p>
+     * Generates a random typing speed.
+     * <p>
+     * Schedules a periodic TimerTask with period length of typeSpeed, which:
+     * <p>
+     * - Sets the letterBoxes[letterBoxIndex] text to a char at the same position in currentWordOnDisplay.
+     * <p>
+     * - Increases the letterBoxIndex.
+     * <p>
+     * - If letterBoxIndex equals WORD_LENGTH:
+     * <p>
+     * -- Cancels the animation timer.
+     * <p>
+     * -- Sets the letterBoxIndex to 0
+     * <p>
+     * -- Randomly sets all the letterBoxes to correct, wrong, or noPositionBackground.
      */
     void animate() {
 
@@ -152,8 +184,7 @@ public class RulesFrame extends DefaultFrame {
 
         for (LetterBox l : letterBoxes) {
 
-            l.setDefaultBG();
-            l.setText(" ");
+            l.setText(EMPTY_CHAR);
         }
 
 
@@ -168,7 +199,7 @@ public class RulesFrame extends DefaultFrame {
                 letterBoxIndex++;
 
 
-                if (letterBoxIndex == letterBoxes.length) {
+                if (letterBoxIndex == WORD_LENGTH) {
                     animation.cancel();
                     letterBoxIndex = 0;
 
@@ -198,12 +229,17 @@ public class RulesFrame extends DefaultFrame {
 
 
     /**
-     alters the infobox slightly to make it fit more (used for rules)
-     * @param l
+     * Alters the InfoLabels by changing their horizontalAlignment and font.
+     *
+     * @param labels
      */
-    void alterRules(InfoLabel l) {
+    void alterRules(InfoLabel... labels) {
 
-        l.setHorizontalAlignment(JLabel.LEFT);
-        l.setFont(new Font(l.getFont().getFontName(), Font.ITALIC, 30));
+
+        for (InfoLabel l : labels) {
+            l.setHorizontalAlignment(JLabel.LEFT);
+            l.setFont(new Font(l.getFont().getFontName(), Font.ITALIC, 30));
+        }
+
     }
 }

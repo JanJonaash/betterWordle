@@ -10,6 +10,9 @@ public class ActionRestartGame extends DefaultAction implements ActionCommand{
         super(theme);
     }
 
+    /**
+     * Displays a new GameFrame.
+     */
     @Override
     public void execute() {
         new GameFrame(theme);
