@@ -19,7 +19,7 @@ public abstract class Words {
     static void loadWords() throws IOException {
 
 
-        BufferedReader br = new BufferedReader(new FileReader("src/com/company/words.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("words.txt"));
 
         String line = "";
 

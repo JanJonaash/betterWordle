@@ -2,6 +2,7 @@ package com.company;
 
 import Frames.MenuFrame;
 
+import javax.swing.*;
 import java.io.IOException;
 
 public class Main {
@@ -14,7 +15,7 @@ public class Main {
             SavedData.createAttemptList();
             SavedData.readFromFile();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Loading failed: "+ e.getMessage());
         }
 
 

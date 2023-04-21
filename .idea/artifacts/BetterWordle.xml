@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="BetterWordle">
+    <output-path>$PROJECT_DIR$/out/artifacts/BetterWordle</output-path>
+    <root id="archive" name="BetterWordle.jar">
+      <element id="module-output" name="betterWordle" />
+    </root>
+  </artifact>
+</component>

@@ -2,6 +2,7 @@ package Frames;
 
 import ActionCommands.ActionBox;
 import ActionCommands.ActionClearData;
+import ActionCommands.ActionShowClearData;
 import ActionCommands.ActionShowMenu;
 import com.company.Attempt;
 import com.company.ColorTheme;
@@ -69,7 +70,7 @@ public class StatsFrame extends DefaultFrame {
         menuBox.setSize((int) ((getWidth()) / 2 - LETTER_DISTANCE_MARGIN * 1.5), (int) ACTION_SIZE.getHeight());
 
 
-        ActionBox clearBox = new ActionBox(new Point(getWidth() - LETTER_DISTANCE_MARGIN - menuBox.getWidth(), menuBox.getY()), theme, new ActionClearData(theme), this);
+        ActionBox clearBox = new ActionBox(new Point(getWidth() - LETTER_DISTANCE_MARGIN - menuBox.getWidth(), menuBox.getY()), theme, new ActionShowClearData(theme), this);
         clearBox.setSize(menuBox.getSize());
 
 
